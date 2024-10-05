@@ -1,0 +1,124 @@
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #f8f8f8;
+  }
+  
+  .profile-header {
+    margin-top: 10px;
+    width: 80%;
+    max-width: 100vw;
+    height: 80vh;
+    background-color: #000;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    position: relative;
+  }
+
+  .profile-header video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border: transparent;
+    transform: translate(-50%, -50%);
+  }
+  
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    background-color: #d7d7f8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    color: white;
+    position: absolute;
+    top: 50%;
+    color: black;
+    left: 50%;
+    transform: translate(-50%);
+  }
+  .profile-avatar, .profile-name {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .profile-name{
+    color: rgba(85, 103, 83, 0.683);
+  }
+  .profile-stats {
+    display:flex;
+    justify-content: space-around;
+    padding: 20px;
+    width: 100%;    
+    max-width: 800px;
+    border-bottom: 1px solid #e6e6e6;
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-item p:first-child {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  .stat-item p:last-child {
+    font-size: 14px;
+    color: gray;
+  }
+  
+  .activity-menu {
+    display: grid;
+    width: 20vw;
+    height: 55vh;
+    background-color: white;
+    border-bottom: 1px solid #e6e6e6;
+    transform: translate(-10px,0);
+  }
+  
+  .menu-item {
+    padding: 15px 20px;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .menu-item:hover {
+    border-bottom: 2px solid #ff6666;
+  }
+  
+  .content-container {
+    width: 100%;
+    max-width: 800px;
+    height: 55vh;
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .empty-content {
+    color: gray;
+    font-size: 18px;
+    margin-top: 40px;
+  }
+  
+  .empty-content-icon {
+    font-size: 50px;
+    margin-bottom: 20px;
+  }
+  
+  .main-container{
+    display: flex;
+    justify-content: center;
+    width: 85vw;
+    height: auto;
+  }

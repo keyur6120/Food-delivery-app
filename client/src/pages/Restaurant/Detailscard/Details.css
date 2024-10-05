@@ -1,0 +1,235 @@
+.restaurant-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+
+.header-main {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.restaurant-info h1 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.restaurant-info p {
+  margin: 5px 0;
+  color: #666;
+}
+
+.open-hours {
+  font-size: 14px;
+}
+
+.rating span {
+}
+
+.ratings {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  justify-content: center;
+}
+
+.rating-score {
+  background-color: #4caf50;
+  color: white;
+  padding: 3px 5px;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.action-buttons button {
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  background-color: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.nav-tabs {
+  display: flex;
+  border-bottom: 1px solid #ddd;
+  margin-bottom: 20px;
+}
+
+.nav-tabs button {
+  padding: 10px 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.nav-tabs button.active {
+  color: #ff3d00;
+  border-bottom: 2px solid #ff3d00;
+}
+
+.main-content {
+  display: flex;
+  gap: 20px;
+}
+
+.sidebar {
+  width: 25%;
+  border-right: 1px solid #ddd;
+  padding-right: 20px;
+}
+
+.menu-categories {
+  list-style-type: none;
+  padding: 0;
+}
+
+.menu-categories li {
+  margin-bottom: 10px;
+}
+
+.menu-categories button {
+  width: 100%;
+  text-align: left;
+  padding: 8px 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+.menu-categories button:hover {
+  background-color: #f0f0f0;
+}
+
+.menu-categories button.active {
+  color: #ff3d00;
+  font-weight: bold;
+  background-color: #fff0ed;
+}
+
+.menu-section {
+  width: 75%;
+}
+
+.menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  width: 200px;
+}
+
+.scrollable-content {
+  max-height: 600px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.menu-items h3 {
+  margin-bottom: 15px;
+}
+
+.menu-item {
+  display: flex;
+  border-radius: 8px;
+  padding: 15px;
+  gap: 15px; /* Adds space between image and details */
+  box-shadow: 0 0 5px rgb(120, 116, 116);
+  margin-bottom: 15px;
+}
+
+.menu-item img {
+  position: relative; /* Makes this the reference point for absolute positioning */
+  display: flex;
+  align-items: flex-start;
+  padding: 10px;
+  width: 200px; /* Makes image a bit larger */
+  height: 150px;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.item-details h4 {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  margin-bottom: 5px;
+}
+
+.item-rating {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.stars {
+  color: #ffd700;
+}
+
+.votes {
+  font-size: 12px;
+  color: #666;
+  margin-left: 5px;
+}
+
+.item-details {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+  gap: 5px;
+}
+
+.price {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-weight: bold;
+}
+
+.description {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.scrollable-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
