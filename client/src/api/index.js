@@ -11,7 +11,7 @@ export const UserSignIn = async (data) => await MYDB.post("/user/signin", data);
 export const getAllProducts = async (filter) =>
   await MYDB.get(`/food?${filter}`);
 
-export const getProductDetails = async (id) => await MYDB.get(`/food/${id}`);
+export const getProductDetails = async (id,restroId) => await MYDB.get(`/food/${id}/${restroId}`);
 
 //Cart
 
@@ -75,7 +75,6 @@ export const getCategory = async () =>
   await MYDB.get("/category/getAllcategory");
 
 // Restarant
-
 export const getRestaurants = async () =>
   await MYDB.get("/Restro/GetRestaurant");
 

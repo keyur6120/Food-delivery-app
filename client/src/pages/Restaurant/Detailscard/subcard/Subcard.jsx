@@ -1,19 +1,21 @@
 import React from "react";
+import {useNavigate} from 'react-router-dom'
 
-export default function Sub({ data }) {
-  // Check if data exists and has a menu, else render a fallback (e.g., loading or empty state)
+export default function Sub({ data,menuItems,restuaranID}) {
+  
+  const navigate = useNavigate();
+
   if (!data || !data.menu) {
-    return <p>Loading...</p>; // or show some placeholder
+    return <p>Loading...</p>;
   }
-console.log('from sub data',data)
+  
   const Maindata = data.menu;
-
   return (
     <>
-      <h3>Newly Launched</h3>
+      <h3>{menuItems}</h3>
       <div className="menu-items">
         {Maindata.map((item, index) => (
-          <div className="menu-item" key={index}>
+          <div className="menu-item" key={index} onClick={()=> navigate(`/dishes/${item._id}?restroId=${restuaranID}`)}>
             <img src={item.image} alt={item.name} />
             <div className="item-details">
               <h4>{item.name}</h4>

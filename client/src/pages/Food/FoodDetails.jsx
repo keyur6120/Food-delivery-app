@@ -7,7 +7,7 @@ import {
   FavoriteBorderOutlined,
   FavoriteRounded,
 } from "@mui/icons-material";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams,useLocation } from "react-router-dom";
 import {
   addToCart,
   addToFavourite,
@@ -108,10 +108,11 @@ const Ingridents = styled.div`
   font-weight: 500;
   diaplay: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 30px;
 `;
 const Items = styled.div`
   display: flex;
+  margin-top: 12px; 
   flex-wrap: wrap;
   gap: 12px;
 `;
@@ -145,107 +146,112 @@ const FoodDetails = () => {
   const [cartLoading, setCartLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [product, setProduct] = useState();
+  const location = useLocation();
+  const restroId = location.search.split("=")[1];
 
   const getProduct = async () => {
-    setLoading(true);
-    await getProductDetails(id).then((res) => {
-      setProduct(res.data);
-      setLoading(false);
-    });
-  };
-
-  const removeFavourite = async () => {
-    setFavoriteLoading(true);
-    const Id = localStorage.getItem("user_Id");
-    await deleteFromFavourite({ pid: id, uid: Id })
-      .then((res) => {
-        setFavorite(false);
-        setFavoriteLoading(false);
-      })
-      .catch((err) => {
-        setFavoriteLoading(false);
-        dispatch(
-          openSnackbar({
-            message: err.message,
-            severity: "error",
-          })
-        );
+    try {
+      await getProductDetails(id,restroId).then((res) => {
+        setProduct(res.data);
+        console.log("product", res.data);
       });
+    } catch (error) {
+      console.log("error", error);
+    }
   };
+  console.log("product", product);
+  // const removeFavourite = async () => {
+  //   setFavoriteLoading(true);
+  //   const Id = localStorage.getItem("user_Id");
+  //   await deleteFromFavourite({ pid: id, uid: Id })
+  //     .then((res) => {
+  //       setFavorite(false);
+  //       setFavoriteLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       setFavoriteLoading(false);
+  //       dispatch(
+  //         openSnackbar({
+  //           message: err.message,
+  //           severity: "error",
+  //         })
+  //       );
+  //     });
+  // };
 
-  const addFavourite = async () => {
-    setFavoriteLoading(true);
-    const Id = localStorage.getItem("user_Id");
-    await addToFavourite({ pid: id, uid: Id })
-      .then((res) => {
-        setFavorite(true);
-        setFavoriteLoading(false);
-      })
-      .catch((err) => {
-        setFavoriteLoading(false);
-        dispatch(
-          openSnackbar({
-            message: err.message,
-            severity: "error",
-          })
-        );
-      });
-  };
+  // const addFavourite = async () => {
+  //   setFavoriteLoading(true);
+  //   const Id = localStorage.getItem("user_Id");
+  //   await addToFavourite({ pid: id, uid: Id })
+  //     .then((res) => {
+  //       setFavorite(true);
+  //       setFavoriteLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       setFavoriteLoading(false);
+  //       dispatch(
+  //         openSnackbar({
+  //           message: err.message,
+  //           severity: "error",
+  //         })
+  //       );
+  //     });
+  // };
 
-  const checkFavorite = async () => {
-    setFavoriteLoading(true);
-    const Id = localStorage.getItem("user_Id");
-    await getFavourite({ uid: Id })
-      .then((res) => {
-        const favourit = res.data.map((item) => {
-          return item._id;
-        });
-        if (favourit.includes(id)) {
-          setFavorite(true);
-        } else {
-          setFavorite(false);
-        }
-        setFavoriteLoading(false);
-      })
-      .catch((err) => {
-        setFavoriteLoading(false);
-        dispatch(
-          openSnackbar({
-            message: err.message,
-            severity: "error",
-          })
-        );
-      });
-  };
+  // const checkFavorite = async () => {
+  //   setFavoriteLoading(true);
+  //   const Id = localStorage.getItem("user_Id");
+  //   await getFavourite({ uid: Id })
+  //     .then((res) => {
+  //       const favourit = res.data.map((item) => {
+  //         return item._id;
+  //       });
+  //       if (favourit.includes(id)) {
+  //         setFavorite(true);
+  //       } else {
+  //         setFavorite(false);
+  //       }
+  //       setFavoriteLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       setFavoriteLoading(false);
+  //       dispatch(
+  //         openSnackbar({
+  //           message: err.message,
+  //           severity: "error",
+  //         })
+  //       );
+  //     });
+  // };
 
   useEffect(() => {
     getProduct();
-    checkFavorite();
+    // checkFavorite();
   }, [favorite]);
 
-  // done
-  const addCart = async (condition) => {
-    setCartLoading(true);
-    const Id = localStorage.getItem("user_Id");
-    // token, { productId: id, quantity: 1 }
-    await addToCart({ pid: id, uid: Id, qun: 1 })
-      .then((res) => {
-        setCartLoading(false);
-        console.log("consoling from add cart in Food Details", res.data);
-        if (condition) {
-          navigate("/cart");
-        }
-      })
-      .catch((err) => {
-        setCartLoading(false);
-        dispatch(
-          openSnackbar({
-            message: err.message,
-            severity: "error",
-          })
-        );
-      });
-  };
+  // // done
+  // const addCart = async (condition) => {
+  //   setCartLoading(true);
+  //   const Id = localStorage.getItem("user_Id");
+  //   // token, { productId: id, quantity: 1 }
+  //   await addToCart({ pid: id, uid: Id, qun: 1 })
+  //     .then((res) => {
+  //       setCartLoading(false);
+  //       console.log("consoling from add cart in Food Details", res.data);
+  //       if (condition) {
+  //         navigate("/cart");
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       setCartLoading(false);
+  //       dispatch(
+  //         openSnackbar({
+  //           message: err.message,
+  //           severity: "error",
+  //         })
+  //       );
+  //     });
+  // };
 
   return (
     <Container>
@@ -254,7 +260,7 @@ const FoodDetails = () => {
       ) : (
         <Wrapper>
           <ImagesWrapper>
-            <Image src={product?.img} />
+            <Image src={product?.img || product?.image} />
           </ImagesWrapper>
           <Details>
             <div>
@@ -271,8 +277,8 @@ const FoodDetails = () => {
             <Ingridents>
               Ingridents
               <Items>
-                {product?.ingredients.map((ingredient) => (
-                  <Item>{ingredient}</Item>
+                {product?.ingredients.map((ingredient,index) => (
+                  <Item key={index}> {ingredient} </Item>
                 ))}
               </Items>
             </Ingridents>
@@ -283,13 +289,13 @@ const FoodDetails = () => {
                 full
                 outlined
                 isLoading={cartLoading}
-                onClick={() => addCart()}
+                // onClick={() => addCart()}
               />
               <Button
                 text="Order Now"
                 full
                 onClick={() => {
-                  addCart(true);
+                  // addCart(true);
                 }}
               />
               <Button
@@ -303,7 +309,7 @@ const FoodDetails = () => {
                 full
                 outlined
                 isLoading={favoriteLoading}
-                onClick={() => (favorite ? removeFavourite() : addFavourite())}
+                // onClick={() => (favorite ? removeFavourite() : addFavourite())}
               />
             </ButtonWrapper>
           </Details>

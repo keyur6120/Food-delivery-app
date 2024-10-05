@@ -1,116 +1,163 @@
 import React, { useEffect, useState } from "react";
 import "./order.css";
-import { assets } from "./../../assets/assets.js";
+import { assets } from "../../assets/assets.js";
 import { getOrders } from "../../api/index.js";
+
+// Sample asset URL
 
 const MyOrders = () => {
   const [data, setData] = useState([]);
-  const [orderData, setOrderData] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null); // Track which order is active
-
-  const getOrderData = async () => {
-    try {
-      const userId = localStorage.getItem("user_Id");
-      await getOrders(userId).then((response) => {
-        console.log(response.data);
-        setOrderData(response.data);
-      });
-    } catch (error) {
-      console.error("Failed to fetch orders", error);
-    }
-  };
-
-  console.log("orderData", orderData);
+  const [activeIndex, setActiveIndex] = useState(null);
 
   // Hardcoded orders data for testing UI
   const hardcodedOrders = [
     {
-      items: [
-        { name: "Product A", quantity: 2 },
+      address: {
+        city: "Brampton",
+        state: "ON",
+        ZIP: "L6Y 2L1",
+        complete_address: "7 Abelard Avenue",
+      },
+      _id: "66ffeaf6c0a50a7f6e593469",
+      total_amount: 413,
+      status: "Pending",
+      products: [
         {
-          address: {
-            city: "Brampton",
-            state: "ON",
-            ZIP: "L6Y 2L1",
-            complete_address: "7 Abelard Avenue",
-          },
+          quantity: 1,
+          _id: "66ffeaf6c0a50a7f6e59346a",
         },
-        { name: "Product B", quantity: 1 },
+        {
+          quantity: 1,
+          _id: "66ffeaf6c0a50a7f6e59346b",
+        },
+        {
+          quantity: 1,
+          _id: "66ffeaf6c0a50a7f6e59346c",
+        },
       ],
-      amount: 50,
-      status: "Shipped",
+      createdAt: "2024-10-04T13:17:42.767Z",
+      updatedAt: "2024-10-04T13:17:42.767Z",
     },
     {
-      items: [
-        { name: "Product C", quantity: 3 },
-        { name: "Product D", quantity: 2 },
+      address: {
+        city: "unjha",
+        state: "Gujarat",
+        ZIP: "384170",
+        complete_address: "14,astha bunglow,unjha",
+      },
+      _id: "66fff07bc0a50a7f6e593bd5",
+      total_amount: 306.8,
+      status: "cash on delivery",
+      products: [
+        {
+          quantity: 1,
+          _id: "66fff07bc0a50a7f6e593bd6",
+        },
+        {
+          quantity: 1,
+          _id: "66fff07bc0a50a7f6e593bd7",
+        },
       ],
-      amount: 80,
-      status: "In Transit",
+      createdAt: "2024-10-04T13:41:15.716Z",
+      updatedAt: "2024-10-04T13:41:15.716Z",
     },
     {
-      items: [{ name: "Product E", quantity: 1 }],
-      amount: 20,
-      status: "Delivered",
+      address: {
+        city: "Brampton",
+        state: "ON",
+        ZIP: "L6Y 2L1",
+        complete_address: "7 Abelard Avenue",
+      },
+      _id: "66fff0b8c0a50a7f6e593dec",
+      total_amount: 330.4,
+      status: "cash",
+      products: [
+        {
+          quantity: 1,
+          _id: "66fff0b8c0a50a7f6e593ded",
+        },
+        {
+          quantity: 1,
+          _id: "66fff0b8c0a50a7f6e593dee",
+        },
+      ],
+      createdAt: "2024-10-04T13:42:16.989Z",
+      updatedAt: "2024-10-04T13:42:16.989Z",
     },
   ];
-
+  // user Order data
+  const fetchOrders = async () => {
+    const userId = localStorage.getItem("user_Id");
+    try {
+      await getOrders(userId).then((response) => {
+        setData(response.data);
+      });
+    } catch (error) {
+      console.log("Error fetching orders:", error);
+    }
+  };
+  
   useEffect(() => {
-    getOrderData();
-    setData(hardcodedOrders); // Load hardcoded data for testing
-  }, []);
+    fetchOrders();
+    console.log('data is inserted')
+  }, [setData]);
+
+  const formmateDate = (date) => {
+    const d = new Date(date);
+    return `${d.getDay()}-${d.getMonth()}-${d.getFullYear()}`;
+  };
 
   const toggleOrder = (index) => {
     setActiveIndex(activeIndex === index ? null : index); // Toggle the active order
   };
 
   return (
-    <>
-      <div className="my-orders">
-        <h2>My Orders</h2>
-        <div className="container">
-          {data.map((order, index) => {
-            return (
+    <div className="my-orders">
+      <h2>My Orders</h2>
+      <div className="container">
+        {data.map((order, index) => {
+          const totalItem = order.products.reduce(
+            (acc, product) => acc + product.quantity,
+            0
+          );
+          return (
+            <div
+              key={index}
+              className={`my-orders-order ${
+                activeIndex === index ? "active" : ""
+              }`}
+            >
+              <img src={assets.parcel_icon} alt="Parcel Icon" />
+              <p>{order.address.complete_address}</p>
+              <p>${order.total_amount}</p>
+              <p>Items: {totalItem}</p>
+              <p>
+                <span>&#x25cf;</span>
+                <b>{order.status}</b>
+              </p>
+              <button
+                onClick={() => toggleOrder(index)} // Toggle order details visibility
+                className={activeIndex === index ? "active" : ""}
+              >
+                {activeIndex === index ? "Hide Order" : "Track Order"}
+              </button>
+              {/* Conditionally show the order details when active */}
               <div
-                key={index}
-                className={`my-orders-order ${
-                  activeIndex === index ? "active" : ""
+                className={`order-details ${
+                  activeIndex === index ? "show" : "hide"
                 }`}
               >
-                <img src={assets.parcel_icon} alt="Parcel Icon" />
-                <p>
-
-                </p>
-                <p>$.00</p>
-                <p>Items: </p>
-                <p>
-                  <span>&#x25cf;</span>
-                  <b></b>
-                </p>
-                <button
-                  onClick={() => toggleOrder(index)} // Toggle order details visibility
-                  className={activeIndex === index ? "active" : ""}
-                >
-                  {activeIndex === index ? "Hide Order" : "Track Order"}
-                </button>
-                {/* Conditionally show the order details when active */}
-                <div
-                  className={`order-details ${
-                    activeIndex === index ? "show" : "hide"
-                  }`}
-                >
-                  {/* Add additional details here if needed */}
-                  <p>Order Details:</p>
-                  <p>Shipping Date: 2023-10-05</p>
-                  <p>Expected Delivery: 2023-10-10</p>
-                  <p>Address:</p>
-                </div>
+                {/* Add additional details here if needed */}
+                <p>Order Details:</p>
+                <p>Order Date:{formmateDate(order.createdAt)}</p>
+                <p></p>
+                <p></p>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
-    </>
+    </div>
   );
 };
 

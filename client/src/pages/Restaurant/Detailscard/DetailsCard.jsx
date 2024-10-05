@@ -100,7 +100,7 @@ export default function RestaurantPage() {
             </div>
 
             <div className="scrollable-content">
-              <Subpage data={data} />
+              <Subpage data={data} menuItems={menuItems} restuaranID ={id}/>
             </div>
           </section>
         </main>

@@ -58,32 +58,32 @@ export default function Component() {
     return Total;
   };
 
-  const userOrder = async () => {
-    try {
-      const Id = localStorage.getItem("user_Id");
-      const TotalAmount = calculateSubtotal();
-      const Details = {
-        Username: deliveryDetails.firstName,
-        total_amount: calculateSubtotal(),
-        address: {
-          city: deliveryDetails.address.City,
-          state: deliveryDetails.address.state,
-          ZIP: deliveryDetails.address.ZIP,
-          complete_address: deliveryDetails.address.complete_address,
-        },
-        products: product.map((item) => {
-          return {
-            productId: item._Id,
-            quantity: item.quantity,
-          };
-        }),
-        user: Id, // Replace with actual user ID
-        status: "Pending", // or any other status
-      };
-    } catch (error) {
-      console.log(error);
-    }
-  };
+ 
+  //   try {
+  //     const Id = localStorage.getItem("user_Id");
+  //     const TotalAmount = calculateSubtotal();
+  //     const Details = {
+  //       Username: deliveryDetails.firstName,
+  //       total_amount: calculateSubtotal(),
+  //       address: {
+  //         city: deliveryDetails.address.City,
+  //         state: deliveryDetails.address.state,
+  //         ZIP: deliveryDetails.address.ZIP,
+  //         complete_address: deliveryDetails.address.complete_address,
+  //       },
+  //       products: product.map((item) => {
+  //         return {
+  //           productId: item._Id,
+  //           quantity: item.quantity,
+  //         };
+  //       }),
+  //       user: Id, // Replace with actual user ID
+  //       status: "Pending", // or any other status
+  //     };
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const newhandler = async () => {
     try {
@@ -120,73 +120,73 @@ export default function Component() {
   };
 
   //done
-  const addCart = async (id) => {
-    const userId = localStorage.getItem("user_Id");
-    try {
-      await addToCart({ pid: id, uid: userId, qun: 1 });
+  // const addCart = async (id) => {
+  //   const userId = localStorage.getItem("user_Id");
+  //   try {
+  //     await addToCart({ pid: id, uid: userId, qun: 1 });
 
-      setProduct((prevProducts) =>
-        prevProducts.map((item) =>
-          item.product._id === id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      );
+  //     setProduct((prevProducts) =>
+  //       prevProducts.map((item) =>
+  //         item.product._id === id
+  //           ? { ...item, quantity: item.quantity + 1 }
+  //           : item
+  //       )
+  //     );
 
-      dispatch(
-        openSnackbar({
-          message: "Product quantity increased",
-          severity: "success",
-        })
-      );
-    } catch (err) {
-      dispatch(
-        openSnackbar({
-          message: err.message,
-          severity: "error",
-        })
-      );
-    }
-  };
+  //     dispatch(
+  //       openSnackbar({
+  //         message: "Product quantity increased",
+  //         severity: "success",
+  //       })
+  //     );
+  //   } catch (err) {
+  //     dispatch(
+  //       openSnackbar({
+  //         message: err.message,
+  //         severity: "error",
+  //       })
+  //     );
+  //   }
+  // };
 
   //working
-  const removeCart = async (id, quantity, type) => {
-    const userId = localStorage.getItem("user_Id");
-    let qnt = quantity > 0 ? 1 : null;
-    if (type === "full") qnt = null;
+  // const removeCart = async (id, quantity, type) => {
+  //   const userId = localStorage.getItem("user_Id");
+  //   let qnt = quantity > 0 ? 1 : null;
+  //   if (type === "full") qnt = null;
 
-    try {
-      await deleteFromCart({ pid: id, qun: qnt, uid: userId });
+  //   try {
+  //     await deleteFromCart({ pid: id, qun: qnt, uid: userId });
 
-      if (type === "full") {
-        setProduct((prevProducts) =>
-          prevProducts.filter((item) => item.product._id !== id)
-        );
-      } else {
-        setProduct((prevProducts) =>
-          prevProducts.map((item) =>
-            item.product._id === id
-              ? { ...item, quantity: item.quantity - 1 }
-              : item
-          )
-        );
-      }
+  //     if (type === "full") {
+  //       setProduct((prevProducts) =>
+  //         prevProducts.filter((item) => item.product._id !== id)
+  //       );
+  //     } else {
+  //       setProduct((prevProducts) =>
+  //         prevProducts.map((item) =>
+  //           item.product._id === id
+  //             ? { ...item, quantity: item.quantity - 1 }
+  //             : item
+  //         )
+  //       );
+  //     }
 
-      dispatch(
-        openSnackbar({
-          message: "Product quantity decreased",
-          severity: "success",
-        })
-      );
-    } catch (err) {
-      dispatch(
-        openSnackbar({
-          message: err.message,
-          severity: "error",
-        })
-      );
-    }
-  };
+  //     dispatch(
+  //       openSnackbar({
+  //         message: "Product quantity decreased",
+  //         severity: "success",
+  //       })
+  //     );
+  //   } catch (err) {
+  //     dispatch(
+  //       openSnackbar({
+  //         message: err.message,
+  //         severity: "error",
+  //       })
+  //     );
+  //   }
+  // };
 
   useEffect(() => {
     getProducts();
@@ -223,7 +223,7 @@ export default function Component() {
                 <label htmlFor="mobile">Mobile Number</label>
                 <input
                   id="mobile"
-                  placeholder="+1 (555) 000-0000"
+                  placeholder="+91 (990) 080-0088"
                   value={deliveryDetails.phoneNumber}
                   onChange={(e) => {
                     setDeliveryDetails({
@@ -254,7 +254,7 @@ export default function Component() {
                 <label htmlFor="city">City</label>
                 <input
                   id="city"
-                  placeholder="New York"
+                  placeholder="Mumbai"
                   value={deliveryDetails.address.City}
                   onChange={(e) => {
                     setDeliveryDetails({
@@ -273,7 +273,7 @@ export default function Component() {
                 <label htmlFor="state">State</label>
                 <input
                   id="state"
-                  placeholder="NY"
+                  placeholder="BOM"
                   value={deliveryDetails.address.state}
                   onChange={(e) => {
                     setDeliveryDetails({
