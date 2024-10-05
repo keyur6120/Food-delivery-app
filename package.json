@@ -1,0 +1,17 @@
+{
+  "name": "fooddelivery-mern-main",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start-App": "concurrently \"npm run start-client\" \"npm run start-server\"",
+    "start-client": "npm --prefix ./client start",
+    "start-server": "npm --prefix ./server start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
