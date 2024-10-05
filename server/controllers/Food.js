@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Food from "../models/Food.js";
-import {createError} from '../error.js'
+import { createError } from '../error.js'
+import Restaurant from '../models/Restaurant.js'
 
 
 export const addProducts = async (req, res, next) => {
@@ -35,7 +36,7 @@ export const addProducts = async (req, res, next) => {
 
 
 //!getAllProducts
-export const  getFoodItems = async (req, res, next) => {
+export const getFoodItems = async (req, res, next) => {
   try {
     let { categories, minPrice, maxPrice, ingredients, search } = req.query;
     ingredients = ingredients?.split(",");
@@ -76,34 +77,47 @@ export const  getFoodItems = async (req, res, next) => {
 //! getProductDetails()
 export const getFoodById = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!mongoose.isValidObjectId(id)) {
-      return next(createError(400, "Invalid product ID"));
+    const { foodId, RestaurantId } = req.params;
+
+    if (!mongoose.isValidObjectId(foodId)) {
+      return next(createError(400, "Invalid food ID"));
     }
-    const food = await Food.findById(id);
-    if (!food) {
-      return next(createError(404, "Food not found"));
+
+    const food = await Food.findById(foodId);
+    if (food) {
+      return res.status(200).json(food);
     }
-    return res.status(200).json(food);
+
+    const restaurant = await Restaurant.findById(RestaurantId);
+    if (!restaurant) {
+      return next(createError(404, "Restaurant not found"));
+    }
+
+    const menuItem = restaurant.menu.find(item => item._id.toString() === foodId);
+    if (!menuItem) {
+      return next(createError(404, "Food item not found in the restaurant's menu"));
+    }
+
+    return res.status(200).json(menuItem);
   } catch (err) {
     next(err);
   }
 };
 
-// create food category 
 
-export const createCategory = async(req,res,next) => {
-try {
-  const {name, Url} = req.body
+// create food category 
+export const createCategory = async (req, res, next) => {
+  try {
+    const { name, Url } = req.body
     const category = new Category({
       name: name,
       image: Url
     })
-   await category.save()
-   res.status(200).json({message:'done'})
-} catch (error) {
-  res.status(500).json({message: "error at category controller", error})
-}
+    await category.save()
+    res.status(200).json({ message: 'done' })
+  } catch (error) {
+    res.status(500).json({ message: "error at category controller", error })
+  }
 }
 
 

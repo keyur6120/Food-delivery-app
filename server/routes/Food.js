@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/add", addProducts);
 router.get("/", getFoodItems);
-router.get("/:id", getFoodById);
+router.get("/:foodId/:RestaurantId", getFoodById);
 
 
 router.post("/category",createCategory)
