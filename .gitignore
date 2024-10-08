@@ -8,7 +8,6 @@
 data.json
 /.pnp
 .pnp.js
-
 # testing
 /coverage
 
