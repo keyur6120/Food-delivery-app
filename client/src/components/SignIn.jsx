@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { UserSignIn } from "../api";
 import { loginSuccess } from "../redux/reducers/UserSlice";
 import { openSnackbar } from "../redux/reducers/SnackbarSlice";
+import { Alert } from "@mui/material";
 
 const Container = styled.div`
   width: 100%;
@@ -43,6 +44,7 @@ const SignIn = ({ setOpenAuth }) => {
   const [buttonDisabled, setButtonDisabled] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [Error, setError] = useState(false)
 
   const validateInputs = () => {
     if (!email || !password) {
@@ -68,9 +70,11 @@ const SignIn = ({ setOpenAuth }) => {
           setLoading(false);
           setButtonDisabled(false);
           setOpenAuth(false);
+          setError(false)
         })
         .catch((err) => {
           setLoading(false);
+          setError(true)
           setButtonDisabled(false);
           dispatch(
             openSnackbar({
@@ -102,6 +106,7 @@ const SignIn = ({ setOpenAuth }) => {
           value={password}
           handelChange={(e) => setPassword(e.target.value)}
         />
+        {Error ? <Alert severity="error">Gmail or password incorrect</Alert>: null}
 
         <TextButton>Forgot Password?</TextButton>
         <Button

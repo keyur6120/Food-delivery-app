@@ -119,9 +119,9 @@
   margin-top: auto;
 }
 
-.price {
+.card-price {
   font-weight: bold;
-  color: #4caf50;
+  color: black;
   font-size: 18px;
 }
 

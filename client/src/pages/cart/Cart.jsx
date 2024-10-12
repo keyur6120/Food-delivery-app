@@ -7,6 +7,7 @@ import "./cart.css";
 import { motion } from "framer-motion";
 import { ChevronDown, CreditCard, DollarSign, Truck } from "lucide-react";
 import "./cart.css";
+import Alert from "@mui/material/Alert";
 
 export default function Component() {
   const [isScheduleDelivery, setIsScheduleDelivery] = useState(false);
@@ -17,6 +18,7 @@ export default function Component() {
   const [reload, setReload] = useState(false);
   const [product, setProduct] = useState([]);
   const [buttonLoad, setButtonLoad] = useState(false);
+  const [Error, setError] = useState(false);
   const [deliveryDetails, setDeliveryDetails] = useState({
     firstName: "",
     emailAddress: "",
@@ -29,9 +31,9 @@ export default function Component() {
     },
   });
 
+
   // done working
   const getProducts = async () => {
-    setLoading(true);
     const Id = localStorage.getItem("user_Id");
     try {
       const res = await getCart({
@@ -58,33 +60,6 @@ export default function Component() {
     return Total;
   };
 
- 
-  //   try {
-  //     const Id = localStorage.getItem("user_Id");
-  //     const TotalAmount = calculateSubtotal();
-  //     const Details = {
-  //       Username: deliveryDetails.firstName,
-  //       total_amount: calculateSubtotal(),
-  //       address: {
-  //         city: deliveryDetails.address.City,
-  //         state: deliveryDetails.address.state,
-  //         ZIP: deliveryDetails.address.ZIP,
-  //         complete_address: deliveryDetails.address.complete_address,
-  //       },
-  //       products: product.map((item) => {
-  //         return {
-  //           productId: item._Id,
-  //           quantity: item.quantity,
-  //         };
-  //       }),
-  //       user: Id, // Replace with actual user ID
-  //       status: "Pending", // or any other status
-  //     };
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
   const newhandler = async () => {
     try {
       const Id = localStorage.getItem("user_Id");
@@ -100,20 +75,28 @@ export default function Component() {
         },
         products: product.map((item) => {
           return {
-            productId: item._Id,
+            productId: item._id,
             quantity: item.quantity,
           };
         }),
-        user: Id, 
-        status:paymentMethod , 
+        product_Info: product.map((newItem) => {
+          return {
+            product_name: newItem.product.name,
+            product_price: newItem.product.price.org,
+            product_image: newItem.product.img,
+          };
+        }),
+        user: Id,
+        status: paymentMethod,
       };
 
       const response = await order(Details).then((res) => {
-        if (res) {
-          window.location.reload();
+        if (paymentMethod === "online") {
+          window.location.href = res.data.url;
+        } else {
+          navigate("/orders");
         }
       });
-      console.log("Order placed successfully", response.data);
     } catch (error) {
       console.error("Error placing order", error);
     }
@@ -192,6 +175,43 @@ export default function Component() {
     getProducts();
     newhandler();
   }, [reload, setProduct, buttonLoad]);
+
+  const Id = localStorage.getItem("user_Id");
+  const TotalAmount = calculateSubtotal();
+  const Details = {
+    Username: deliveryDetails.firstName,
+    total_amount: TotalAmount,
+    address: {
+      city: deliveryDetails.address.City,
+      state: deliveryDetails.address.state,
+      ZIP: deliveryDetails.address.ZIP,
+      complete_address: deliveryDetails.address.complete_address,
+    },
+    products: product.map((item) => {
+      return {
+        productId: item._id,
+        quantity: item.quantity,
+      };
+    }),
+    product_Info: product.map((item) => {
+      return {
+        product_name: item.product.name,
+        product_price: item.product.price.org,
+        product_image: item.product.img,
+      };
+    }),
+    user: Id,
+    status: paymentMethod,
+  };
+  console.log(Details);
+
+  const data = product.map((item) => {
+    return {
+      product_name: item.product.name,
+      product_price: item.product.price.org,
+      product_image: item.product.img,
+    };
+  });
 
   return (
     <div className="container">
@@ -389,6 +409,7 @@ export default function Component() {
               <label htmlFor="note">Additional Notes</label>
               <textarea id="note" placeholder="Any special instructions..." />
             </div>
+            {Error ? <Alert severity="error">please fill in all</Alert> : null}
           </form>
         </motion.div>
         <motion.div
@@ -427,7 +448,7 @@ export default function Component() {
             <span className="total">Total (+ Tax):</span>
             <span className="rupees">${calculateSubtotal().toFixed(2)}</span>
           </div>
-          <button className="confirm-Button" onClick={() => newhandler()}>
+          <button className="confirm-Button" onClick={() => {newhandler()}}>
             Confirm Order
           </button>
         </motion.div>

@@ -10,24 +10,24 @@ export default function AuthRoutes() {
   useEffect(() => {
     const verifyRoute = async () => {
       try {
-        const res = await VerfiUser(token); // Await the API response
+        const res = await VerfiUser(token); 
         if (res && res.data) {
-          setAuthenticated(true); // Set authenticated to true if the token is valid
+          setAuthenticated(true);
         } else {
-          navigate("/"); // Redirect to home if not authenticated
+          navigate("/"); 
         }
       } catch (error) {
         console.error("Verification failed", error);
-        navigate("/"); // Redirect to home if an error occurs
+        navigate("/"); 
       }
     };
 
     if (token) {
       verifyRoute();
     } else {
-      navigate("/"); // Redirect to home if no token is found
+      navigate("/"); 
     }
   }, [token, navigate]);
 
-  return authenticated ? <Outlet /> : null; // Render child routes if authenticated
+  return authenticated ? <Outlet /> : null;
 }

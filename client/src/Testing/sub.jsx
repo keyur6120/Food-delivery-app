@@ -1,32 +1,54 @@
-import React, { useState } from "react";
-import './Test.css'
-import { FaHeart, FaShoppingCart } from 'react-icons/fa';
+import { useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
+import { useState } from 'react';
 
+const CheckoutForm = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-export default function Sub({product}) {
-    const [Data, setData] = useState([product])
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    if (!stripe || !elements) return;
+
+    setLoading(true);
+
+    const cardElement = elements.getElement(CardElement);
+
+    // Simulate Stripe PaymentMethod creation
+    const { error, paymentMethod } = await stripe.createPaymentMethod({
+      type: 'card',
+      card: cardElement,
+    });
+
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+
+    // Simulate backend response with a delay
+    setTimeout(() => {
+      setLoading(false);
+      setPaymentSuccess(true);
+    }, 1500); // Simulated delay for payment success
+  };
+
   return (
-    <div className="product-list">
-    {Data.map(product => (
-      <div key={product._id} className="product-card">
-        <div className="product-image-container">
-          <img src={product.img} alt={product.name} className="product-image" />
-          <button className="like-button">
-            <FaHeart />
-          </button>
-        </div>
-        <div className="product-info">
-          <h3>{product.name}</h3>
-          <p>{product.category}</p>
-          <div className="product-footer">
-            <p className="price">₹{product.price.mrp.toFixed(2)}</p>
-            <button className="add-to-cart">
-              <FaShoppingCart /> Add
-            </button>
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-  )
-}
+    <div>
+      <form onSubmit={handleSubmit}>
+        <CardElement />
+        <button type="submit" disabled={!stripe || loading}>
+          {loading ? 'Processing...' : 'Pay'}
+        </button>
+      </form>
+
+      {error && <div>{error}</div>}
+      {paymentSuccess && <div>Payment Successful!</div>}
+    </div>
+  );
+};
+
+export default CheckoutForm;

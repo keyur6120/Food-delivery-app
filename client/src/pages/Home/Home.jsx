@@ -70,7 +70,7 @@ const Home = () => {
   useEffect(() => {
     getProducts();
     getCategories();
-  }, [setProducts]);
+  }, [setProducts,setcategory]);
 
   return (
     <Container>
@@ -88,7 +88,7 @@ const Home = () => {
         {loading ? (
           <CircularProgress />
         ) : (
-          <CardWrapper>
+          <CardWrapper onClick={()=> console.log('click on card')}>
             {products.map((item, index) => (
               <ProductsCard product={item} key={index} />
             ))}
