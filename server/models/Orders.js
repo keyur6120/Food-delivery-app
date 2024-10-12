@@ -12,22 +12,27 @@ const OrderSchema = new mongoose.Schema(
     },
     address: {
       city: { type: String },
-      state: { type: String},
-      ZIP: { type: String},
-      complete_address: { type: String},
+      state: { type: String },
+      ZIP: { type: String },
+      complete_address: { type: String },
     },
     status: {
       type: String,
       default: "Payment Done",
     },
     user: {
-      type:  mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
     products: [{
-      productId : {type : mongoose.Schema.Types.ObjectId },
-      quantity : {type : Number}
+      productId: { type: mongoose.Schema.Types.ObjectId },
+      quantity: { type: Number }
+    }],
+    product_Info: [{
+      product_name: { type: String },
+      product_price: { type: Number },
+      product_image: { type: String }
     }]
   },
   { timestamps: true }
