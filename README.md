@@ -57,11 +57,7 @@ Install dependencies:
 ```bash
 npm install
 ```
-Create a `.env` file in the backend directory and add the following:
-```env
-JWT_SECRET="random#secret"
-STRIPE_SECRET_KEY="sk_test_51JhWAiRXoTvIuM91beRv8XldfL3GGKyuLhzabkSwNeIXryY51G9UKnwNUFcotg0N6k4UAGhiprjJd4XhAF85JCN4004TC42zkl"
-```
+
 Start the backend server:
 ```bash
 npm run server
