@@ -17,36 +17,31 @@ Table of Contents
 - [Contributing](#contributing)
 - [Contact](#contact)
 
-## Introduction
-This is a full-stack food ordering web application built using the MERN stack (MongoDB, Express, React, Node.js). The application consists of a customer-facing app for ordering food and an admin app for managing orders, menu items, and more.
+## Overview
+This project is a comprehensive food ordering web application developed using the MERN stack, which includes MongoDB, Express, React, and Node.js. The application features a customer-facing interface for food ordering and an admin interface for managing orders and menu items.
 
 ## Features
-- User authentication and authorization
-- Browse food items
-- Add items to the cart and place orders
-- **Stripe Payment Integration**: Secure and reliable payment processing using Stripe
-- Order tracking
-- Admin panel to manage menu items and orders
+- **User Authentication**: Secure login and registration process.
+- **Menu Browsing**: Easily browse through a wide variety of food items.
+- **Shopping Cart**: Add items to the cart and manage orders effortlessly.
+- **Secure Payments**: Integrated payment processing with Stripe for safe transactions.
+- **Order Management**: Track orders in real-time.
+- **Admin Dashboard**: A dedicated admin panel for overseeing menu items and order management.
 
 ## Technologies Used
-- **Frontend**: React.js, React Context API, React Router
-- **Backend**: Node.js, Express.js
-- **Payment Gateway**: Stripe
-- **Database**: MongoDB
+- **Frontend**: React.js, React Context API, React Router.
+- **Backend**: Node.js, Express.js.
+- **Payment Gateway**: Uses Stripe for payment processing.
+- **Database**: MongoDB for data storage.
 - **Authentication**: JWT (JSON Web Tokens)
 - **Styling**: CSS
 
 ## Installation
 
 ### Prerequisites
-- Node.js
-- MongoDB
+- Make sure you have Node.js installed.
+- MongoDB should be running on your machine or use a cloud service.
 
-### Clone the Repository
-```bash
-git clone https://github.com/DulanjaliSenarathna/mern-food-delivery-app.git
-cd mern-food-delivery-app
-```
 
 ### Backend Setup
 Navigate to the backend directory:
@@ -92,12 +87,12 @@ npm start
 ```
 
 ## Usage
-- Access the customer-facing app at `http://localhost:5173`.
-- Access the admin app at `http://localhost:5174`.
-- Register as a new user or log in with existing credentials.
-- Browse the menu, add items to the cart, and place an order.
-- Pay using a dummy visa card.
-- Use the admin panel to manage orders and menu items.
+- Open the customer-facing application at http://localhost:3000.
+- Visit the admin dashboard at http://localhost:5173.
+- Sign up as a new user or log in with your existing credentials.
+- Explore the menu, add items to your cart, and complete your order.
+- Use a test Visa card for payment processing.
+- Utilize the admin dashboard to manage orders and menu items effectively.
 
 ## Screenshots
 ![Screenshot 1](Screenshots/Screenshot%202024-10-13%20153952.png)
@@ -107,14 +102,7 @@ npm start
 
 
 ## API Documentation
-The API endpoints for the backend can be documented using tools like Postman or Swagger. Include endpoints for user authentication, menu items, orders, and more.
+The backend API endpoints can be documented with tools like Postman or Swagger. Ensure you cover endpoints related to user authentication, menu items, orders, and other relevant functionalities.
 
 ## Contributing
-Contributions are welcome! Please fork the repository and create a pull request with your changes. Make sure to follow the code style and include relevant tests.
-
-## Contact
-For any questions or suggestions, feel free to contact me.
-
-Happy coding!
-
-Feel free to customize this template according to your specific project details and requirements.
+We welcome contributions! Please fork the repository and submit a pull request with your enhancements. Be sure to adhere to the project's coding standards and include relevant tests where applicable.
