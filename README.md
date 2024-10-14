@@ -101,8 +101,10 @@ npm start
 
 ## Screenshots
 ![Screenshot 1](Screenshots/Screenshot%202024-10-13%20153952.png)
-![Screenshot 2](path/to/screenshot2.png)
-![Screenshot 3](path/to/screenshot3.png)
+![Screenshot 2](Screenshots/Screenshot%202024-10-13%20154229.png)
+![Screenshot 3](Screenshots/Screenshot%202024-10-13%20154325.png)     
+![Screenshot 4](Screenshots/Screenshot%202024-10-13%20154401.png)     
+
 
 ## API Documentation
 The API endpoints for the backend can be documented using tools like Postman or Swagger. Include endpoints for user authentication, menu items, orders, and more.
