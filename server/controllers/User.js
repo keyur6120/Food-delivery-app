@@ -383,7 +383,7 @@ export const getUserOrders = async (req, res, next) => {
     const user = await User.findById(userId).populate({
       path: "orders",
       select:
-        "address products total_amount status createdAt updatedAt product_Info",
+        "address products total_amount status createdAt updatedAt product_Info Username delivery_status Time",
     });
 
     if (!user) {
@@ -394,3 +394,4 @@ export const getUserOrders = async (req, res, next) => {
     next(err);
   }
 };
+

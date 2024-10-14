@@ -1,39 +1,49 @@
 import mongoose from "mongoose";
 import Food from "../models/Food.js";
-import { createError } from '../error.js'
-import Restaurant from '../models/Restaurant.js'
-
+import { createError } from "../error.js";
+import Restaurant from "../models/Restaurant.js";
+import { path } from "../config/Cloudnariy.js";
 
 export const addProducts = async (req, res, next) => {
   try {
     const foodData = req.body;
-    if (!Array.isArray(foodData)) {
-      return next(
-        createError(400, "Invalid request. Expected an array of foods.")
-      );
-    }
+    const ArayData = Array.isArray(foodData) ? foodData : [foodData];
     let createdfoods = [];
-    for (const foodInfo of foodData) {
-      const { name, desc, img, price, ingredients, category } = foodInfo;
+
+    for (const foodInfo of ArayData) {
+      const { name, desc, priceOrg, priceMrp, priceOff, ingredients, category } = foodInfo;
+
+      console.log("foodInfo", foodInfo);
+
+      const img = await path(req.file.path);
+
+      if (!img || !img.url) {
+        return res.status(400).json({ success: false, message: "Image upload failed" });
+      }
+
       const product = new Food({
         name,
         desc,
-        img,
-        price,
+        img: img.url,
+        price: {
+          org: priceOrg,
+          mrp: priceMrp,
+          off: priceOff
+        },
         ingredients,
-        category,
+        category
       });
-      const createdFoods = await product.save();
-      createdfoods.push(createdFoods);
+
+      const newFood = await product.save();
+      createdfoods.push(newFood);
     }
-    return res
-      .status(201)
-      .json({ message: "Products added successfully", createdfoods });
+
+    return res.status(201).json({ message: "Products added successfully", createdfoods });
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };
-
 
 //!getAllProducts
 export const getFoodItems = async (req, res, next) => {
@@ -72,8 +82,6 @@ export const getFoodItems = async (req, res, next) => {
   }
 };
 
-
-
 //! getProductDetails()
 export const getFoodById = async (req, res, next) => {
   try {
@@ -93,7 +101,7 @@ export const getFoodById = async (req, res, next) => {
       return next(createError(404, "Restaurant not found"));
     }
 
-    const menuItem = restaurant.menu.find(item => item._id.toString() === foodId);
+    const menuItem = restaurant.menu.find((item) => item._id.toString() === foodId);
     if (!menuItem) {
       return next(createError(404, "Food item not found in the restaurant's menu"));
     }
@@ -104,20 +112,17 @@ export const getFoodById = async (req, res, next) => {
   }
 };
 
-
-// create food category 
+// create food category
 export const createCategory = async (req, res, next) => {
   try {
-    const { name, Url } = req.body
+    const { name, Url } = req.body;
     const category = new Category({
       name: name,
-      image: Url
-    })
-    await category.save()
-    res.status(200).json({ message: 'done' })
+      image: Url,
+    });
+    await category.save();
+    res.status(200).json({ message: "done" });
   } catch (error) {
-    res.status(500).json({ message: "error at category controller", error })
+    res.status(500).json({ message: "error at category controller", error });
   }
-}
-
-
+};

@@ -4,11 +4,10 @@ import { addProducts
     , getFoodItems
     ,createCategory
  } from "../controllers/Food.js";
-
-
+import {upload} from '../config/multer.js'
 const router = express.Router();
 
-router.post("/add", addProducts);
+router.post("/add",upload.single('img') ,addProducts);
 router.get("/", getFoodItems);
 router.get("/:foodId/:RestaurantId", getFoodById);
 

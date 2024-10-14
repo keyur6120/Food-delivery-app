@@ -84,6 +84,7 @@ export default function Component() {
             product_name: newItem.product.name,
             product_price: newItem.product.price.org,
             product_image: newItem.product.img,
+            quantity: newItem.quantity,
           };
         }),
         user: Id,

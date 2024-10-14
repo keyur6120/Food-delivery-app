@@ -7,22 +7,20 @@ export const MYDB = axios.create({
 export const UserSignUp = async (data) => await MYDB.post("/user/signup", data);
 export const UserSignIn = async (data) => await MYDB.post("/user/signin", data);
 
-//products
+//getproducts
 export const getAllProducts = async (filter) =>
   await MYDB.get(`/food?${filter}`);
 
 export const getProductDetails = async (id, restroId) =>
   await MYDB.get(`/food/${id}/${restroId}`);
 
-//Cart
-
+//getCart
 export const getCart = async ({ uid }) =>
   await MYDB.get(`/user/getallcartItem`, {
     params: { userId: uid },
   });
 
 // add to cart
-// done
 export const addToCart = async ({ pid, uid, qun }) =>
   await MYDB.post(`/user/addcart`, {
     productId: pid,
@@ -31,7 +29,6 @@ export const addToCart = async ({ pid, uid, qun }) =>
   });
 
 // delete from cart
-//done
 export const deleteFromCart = async ({ pid, uid, qun }) =>
   await MYDB.patch(`/user/RemovecartItem`, {
     productId: pid,
@@ -75,7 +72,7 @@ export const VerfiUser = async (token) => {
 export const getCategory = async () =>
   await MYDB.get("/category/getAllcategory");
 
-// Restarant
+//get Restarant
 export const getRestaurants = async () =>
   await MYDB.get("/Restro/GetRestaurant");
 

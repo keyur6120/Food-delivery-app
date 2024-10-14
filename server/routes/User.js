@@ -37,7 +37,6 @@ router.patch("/removefav", removeFromFavorites);
 
 //order routes
 router.post("/order", newOrder);
-// router.get("/getOrder", getAllOrders);
 router.get("/userOrder",getUserOrders)
 
 //split bill & Bill routes

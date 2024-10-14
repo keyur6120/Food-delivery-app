@@ -4,7 +4,7 @@ const OrderSchema = new mongoose.Schema(
   {
     Username: {
       type: String,
-      required: true
+      required: true,
     },
     total_amount: {
       type: Number,
@@ -20,20 +20,33 @@ const OrderSchema = new mongoose.Schema(
       type: String,
       default: "Payment Done",
     },
+    delivery_status: {
+      type: String,
+      default: "Food Processing",
+    },
+    Time: {
+      type: Number,
+      default: "",
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    products: [{
-      productId: { type: mongoose.Schema.Types.ObjectId },
-      quantity: { type: Number }
-    }],
-    product_Info: [{
-      product_name: { type: String },
-      product_price: { type: Number },
-      product_image: { type: String }
-    }]
+    products: [
+      {
+        productId: { type: mongoose.Schema.Types.ObjectId },
+        quantity: { type: Number },
+      },
+    ],
+    product_Info: [
+      {
+        product_name: { type: String },
+        product_price: { type: Number },
+        product_image: { type: String },
+        quantity: { type: Number },
+      },
+    ],
   },
   { timestamps: true }
 );

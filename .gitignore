@@ -26,3 +26,13 @@ data.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
