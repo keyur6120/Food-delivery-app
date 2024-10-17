@@ -3,45 +3,53 @@ import "./Orders.css";
 import { getOrder, orderChanges } from "../../api/Api.js";
 import { toast } from "react-toastify";
 import { assets } from "../../../../client/src/assets/assets.js";
+import { useLocation } from "react-router-dom";
+import { getID } from "../../Redux/reducers/userSlice.js";
+import { useDispatch,useSelector } from "react-redux";
 
-const Orders = ({ url }) => {
+const Orders = () => {
   const [orders, setOrders] = useState([]);
-  const [NewOrder, setNewOrder] = useState([]);
-  const [orderTime, setOrderTime] = useState(0);
 
-  console.log(orderTime);
+  const [NewOrder, setNewOrder] = useState([]);
+
+  const [orderTimes, setOrderTimes] = useState({});
+
+  const Location = useLocation();
+
+  const getuserId = new URLSearchParams(Location.search).get("userId");
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getID({ user: getuserId,myname:"admin" }));
+  }, [getuserId]);
+
+  const user = useSelector((state) => state.user.currentUser);
+  console.log(user);
 
   const fetchAllOrders = async () => {
-    const userID = "66fe34e9b09f72ec2a42e16b";
-    const response = await getOrder(userID)
-      .then((res) => {
-        setNewOrder(res.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      const response = await getOrder(user);
+      setNewOrder(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
-  console.log(NewOrder);
 
   const statusHandler = async (orderId, status, time) => {
-    const response = await orderChanges(orderId, status, time)
-      .then((res) => {
-        toast.success("Order status updated successfully");
-        if (res.data) {
-          fetchAllOrders()
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    if (response) {
-      fetchAllOrders();
+    try {
+      const response = await orderChanges(orderId, status, time);
+      toast.success("Order status updated successfully");
+      if (response.data) {
+        fetchAllOrders();
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   useEffect(() => {
     fetchAllOrders();
-  }, [setNewOrder]);
+  }, []);
 
   const formatTime = (time) => {
     const hours = Math.floor(time / 60);
@@ -49,25 +57,34 @@ const Orders = ({ url }) => {
     return `${hours > 0 ? hours + " hr " : ""}${minutes} min`;
   };
 
+  const handleTimeChange = (orderId, delta) => {
+    setOrderTimes((prevTimes) => {
+      const newTime = (prevTimes[orderId] || 0) + delta;
+
+      if (newTime < 0) {
+        return prevTimes;
+      }
+
+      return {
+        ...prevTimes,
+        [orderId]: newTime,
+      };
+    });
+  };
+
   return (
     <div className="order add">
       <h3>Order Page</h3>
       <div className="order-list">
-        {NewOrder.map((order, index) => (
+        {NewOrder.map((order) => (
           <div key={order._id} className="order-item">
             <img src={assets.parcel_icon} alt="" />
             <div>
               <p className="order-item-food">
-                {order.product_Info.map((item, index) => {
-                  if (index === order.product_Info.length - 1) {
-                    return item.product_name + " x " + item.quantity + " , ";
-                  } else {
-                    return item.product_name + " x " + item.quantity + " , ";
-                  }
-                })}
-              </p>
-              <p className="order-item-name">
-                {/* {order.address.firstName + " " + order.address.lastName} */}
+                {order.product_Info.map(
+                  (item, index) =>
+                    item.product_name + " x " + item.quantity + " , "
+                )}
               </p>
               <div className="order-item-address">
                 <p>{order.address.state + ","}</p>
@@ -83,11 +100,11 @@ const Orders = ({ url }) => {
             <select
               value={order.delivery_status || "processing"}
               onChange={(e) =>
-                statusHandler(order._id, e.target.value, orderTime)
+                statusHandler(order._id, e.target.value, orderTimes[order._id])
               }
             >
               <option value="processing">Processing</option>
-              <option value="out for delivery">out for delivery</option>
+              <option value="out for delivery">Out for delivery</option>
               <option value="cancelled">Cancelled</option>
             </select>
             <div className="order-take-time">
@@ -95,25 +112,22 @@ const Orders = ({ url }) => {
                 src={assets.remove_icon_red}
                 alt="minus icon"
                 className="order-minus-button"
-                onClick={() => setOrderTime(orderTime > 0 ? orderTime - 5 : 0)}
+                onClick={() => handleTimeChange(order._id, -5)}
               />
-              <p>{formatTime(orderTime)}</p>
+              <p>{formatTime(orderTimes[order._id] || 0)}</p>
               <img
                 src={assets.add_icon_green}
                 alt="add icon"
                 className="order-plus-button"
-                onClick={() => setOrderTime(orderTime + 5)}
+                onClick={() => handleTimeChange(order._id, 5)}
               />
             </div>
             <br />
-            <span>
-              {orderTime > 30 ? (
-                <p>it's not recommand to provide much long time to customer</p>
-              ) : (
-                ""
-              )}
-            </span>
-            <button onClick={() => statusHandler()}>submit</button>
+            {orderTimes[order._id] > 30 && (
+              <p>
+                It's not recommended to provide such a long time to the customer
+              </p>
+            )}
           </div>
         ))}
       </div>

@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../redux/reducers/SnackbarSlice.js";
 import { getCart, addToCart, deleteFromCart, order } from "../../api/index.js";
 import "./cart.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
 import { ChevronDown, CreditCard, DollarSign, Truck } from "lucide-react";
 import "./cart.css";
@@ -30,7 +32,6 @@ export default function Component() {
       complete_address: "",
     },
   });
-
 
   // done working
   const getProducts = async () => {
@@ -95,7 +96,11 @@ export default function Component() {
         if (paymentMethod === "online") {
           window.location.href = res.data.url;
         } else {
-          navigate("/orders");
+          toast.success("order placed");
+          // navigate("/orders");
+          setTimeout(() => {
+            navigate("/orders");
+          }, 8000);
         }
       });
     } catch (error) {
@@ -449,10 +454,17 @@ export default function Component() {
             <span className="total">Total (+ Tax):</span>
             <span className="rupees">${calculateSubtotal().toFixed(2)}</span>
           </div>
-          <button className="confirm-Button" onClick={() => {newhandler()}}>
+          <button
+            className="confirm-Button"
+            onClick={() => {
+              newhandler();
+            }}
+          >
             Confirm Order
           </button>
+          <ToastContainer />
         </motion.div>
+        <ToastContainer />
       </div>
     </div>
   );

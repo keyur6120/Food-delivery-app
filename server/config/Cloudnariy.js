@@ -1,10 +1,13 @@
 import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
+import dotenv from "dotenv";
+dotenv.config({path: '../.env'});
+
 
 cloudinary.config({
-  cloud_name: "",
-  api_key: "",
-  api_secret: "",
+  cloud_name: process.env.CLOUD_NAME,
+  api_key:process.env.CLOUDNARY_API_KEY ,
+  api_secret:process.env.CLOUDNARY_SECRET ,
 });
 
 const path = async (localpath) => {

@@ -13,6 +13,7 @@ const MyOrders = () => {
     try {
       const response = await getOrders(userId);
       setData(response.data);
+      console.log("Orders:", response.data);
     } catch (error) {
       console.log("Error fetching orders:", error);
     } finally {
@@ -53,7 +54,7 @@ const MyOrders = () => {
           <h2>My Orders</h2>
           <div className="mo-container">
             {data.map((order, index) => {
-              const totalItem = order.products.reduce(
+              const totalItem = order.product_Info.reduce(
                 (acc, product) => acc + product.quantity,
                 0
               );
@@ -85,6 +86,8 @@ const MyOrders = () => {
                   {activeIndex === index && (
                     <div className="mo-order-details mo-show">
                       <p>Order Details:</p>
+                      <p>Time : {order.Time} min</p>
+                      <p>Delivery status: {order.delivery_status}</p>
                       <p>Order Date: {formatDate(order.createdAt)}</p>
                       <div className="mo-order-expanded">
                         <div className="mo-product-list">
@@ -99,7 +102,7 @@ const MyOrders = () => {
                                 <span className="mo-product-name">
                                   {items.product_name}
                                 </span>
-                                <span className="mo-product-quantity">1*3</span>
+                                <span className="mo-product-quantity">1 X {items.quantity}</span>
                                 <span className="mo-product-price">
                                   ${items.product_price}
                                 </span>
