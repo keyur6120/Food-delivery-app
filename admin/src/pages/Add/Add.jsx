@@ -35,8 +35,8 @@ const Add = () => {
 
     try {
       const res = await addFood(formData) // Send formData instead of JSON data
-      .then((res)=>{
-        toast.success("Product added successfully");
+      .then(()=>{
+        toast.success("Product added successfully")
         window.location.reload();
       })
     } catch (error) {
@@ -106,8 +106,8 @@ const Add = () => {
             <p>Product price</p>
             <input
               type="number"
-              value={data.price.org}
-              onChange={(e) => setData({ ...data, price: { ...data.price, org: e.target.value } })}
+              value={data.price.mrp}
+              onChange={(e) => setData({ ...data, price: { ...data.price, mrp: e.target.value } })}
               placeholder="Enter Price"
               required
             />

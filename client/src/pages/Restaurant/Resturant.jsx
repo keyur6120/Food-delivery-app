@@ -13,6 +13,7 @@ const RestaurantCard = () => {
     try {
       const response = await getRestaurants();
       setData(response.data.data);
+      console.log(response.data.data);
     } catch (error) {
       console.error("Error getting restaurants:", error);
     }

@@ -6,6 +6,7 @@ import { UserSignUp } from "../api";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "../redux/reducers/UserSlice";
 import { openSnackbar } from "../redux/reducers/SnackbarSlice";
+import {toast,ToastContainer} from 'react-toastify'
 
 const Container = styled.div`
   width: 100%;
@@ -32,10 +33,13 @@ const SignUp = ({ setOpenAuth }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [Number, setNumber] = useState();
 
   const validateInputs = () => {
     if (!name || !email || !password) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
+      setLoading(false);
+      setButtonDisabled(false);
       return false;
     }
     return true;
@@ -46,7 +50,7 @@ const SignUp = ({ setOpenAuth }) => {
     setButtonDisabled(true);
 
     if (validateInputs()) {
-      await UserSignUp({ name, email, password })
+      await UserSignUp({ name, email, password, Number })
         .then((res) => {
           dispatch(loginSuccess(res.data));
           dispatch(
@@ -55,16 +59,16 @@ const SignUp = ({ setOpenAuth }) => {
               severity: "success",
             })
           );
+          
           setLoading(false);
           setButtonDisabled(false);
           setOpenAuth(false);
         })
         .catch((err) => {
-          setButtonDisabled(false);
           if (err.response) {
             setLoading(false);
             setButtonDisabled(false);
-            alert(err.response.data.message);
+            toast.error(err.response.data.message) 
             dispatch(
               openSnackbar({
                 message: err.response.data.message,
@@ -90,6 +94,7 @@ const SignUp = ({ setOpenAuth }) => {
         <Title>Create New Account 👋</Title>
         <Span>Please enter details to create a new account</Span>
       </div>
+      <ToastContainer/>
       <div style={{ display: "flex", gap: "20px", flexDirection: "column" }}>
         <TextInput
           label="Full Name"
@@ -109,6 +114,12 @@ const SignUp = ({ setOpenAuth }) => {
           password
           value={password}
           handelChange={(e) => setPassword(e.target.value)}
+        />
+        <TextInput
+          label="mobile number"
+          placeholder="Enter mobile number"
+          value={Number}
+          handelChange={(e) => setNumber(e.target.value)}
         />
         <Button
           text="Sign Up"

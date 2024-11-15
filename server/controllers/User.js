@@ -5,6 +5,7 @@ import { createError } from "../error.js";
 import User from "../models/User.js";
 import Food from "../models/Food.js";
 import Orders from "../models/Orders.js";
+import Restaurant from "../models/Restaurant.js";
 import SplitBills from "../models/SplitBills.js";
 import dotenv from "dotenv";
 import Stripe from "stripe";
@@ -12,12 +13,19 @@ dotenv.config();
 
 export const UserRegister = async (req, res, next) => {
   try {
-    const { email, password, name, img } = req.body;
+    const { email, password, name, img, Number } = req.body;
+
+    if (typeof Number == String || Number.length < 10 || Number.length > 10) {
+      return next(createError(400, "Phone number must be a 10-digit"));
+    }
 
     //Check for existing user
-    const existingUser = await User.findOne({ email }).exec();
+    const existingUser = await User.findOne({
+      $or: [{ email: email }, { phone: Number }],
+    });
     if (existingUser) {
-      return next(createError(409, "Email is already in use."));
+      console.log("find it");
+      return next(createError(409, "Email or phone number is already in use"));
     }
 
     const salt = bcrypt.genSaltSync(10);
@@ -28,6 +36,7 @@ export const UserRegister = async (req, res, next) => {
       email,
       password: hashedPassword,
       img,
+      phone: Number,
     });
     const createdUser = await user.save();
     const token = jwt.sign({ id: createdUser._id }, process.env.SECRET_KEY, {
@@ -69,7 +78,7 @@ export const UserLogin = async (req, res, next) => {
 
 export const addToCart = async (req, res, next) => {
   try {
-    const { productId, userId, quantity } = req.body;
+    const { productId, userId, quantity, RestroId } = req.body;
 
     if (!productId || !userId || !quantity) {
       return res.status(400).json({ message: "Missing required fields" });
@@ -85,14 +94,13 @@ export const addToCart = async (req, res, next) => {
       user.cart = [];
     }
 
-    const existingCartItemIndex = user.cart.findIndex((item) =>
-      item.product.equals(productId)
-    );
-
+    const existingCartItemIndex = user.cart.findIndex((item) => {
+      return item.product.includes(productId);
+    });
     if (existingCartItemIndex !== -1) {
       user.cart[existingCartItemIndex].quantity += quantity;
     } else {
-      user.cart.push({ product: productId, quantity });
+      user.cart.push({ product: productId, quantity, Restro: RestroId });
     }
 
     // Save updated user document
@@ -143,22 +151,58 @@ export const removeFromCart = async (req, res, next) => {
 export const getAllCartItems = async (req, res, next) => {
   try {
     const { userId } = req.query;
-    const user = await User.findById(userId).populate({
-      path: "cart.product",
-      model: "Food",
-    });
+
+    const user = await User.findById(userId);
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Extract the cart items from the user document
-    const cartItems = user.cart;
+    const matchData = [];
+    const unmatchedData = [];
 
-    // Return the cart items as a JSON response
-    return res.status(200).json(cartItems);
+    await Promise.all(
+      user.cart.map(async (item) => {
+        const productId = item.product;
+        const quantity   = item.quantity
+
+        const findInFood = await Food.findById(productId);
+
+        if (findInFood) {
+          matchData.push({
+            _id : productId,
+            product: findInFood, 
+            quantity : quantity
+          });
+        } else {
+          unmatchedData.push(item);
+        }
+      })
+    );
+
+    await Promise.all(
+      unmatchedData.map(async (item) => {
+        const productId = item.product;
+        const RestroId = item.Restro;
+        const quantity   = item.quantity
+
+        const findInRestaurant = await Restaurant.findById(RestroId, {
+          menu: { $elemMatch: { productId } },
+        })
+        if(findInRestaurant.menu.length >0){
+          const restroData = findInRestaurant.menu[0]
+          matchData.push({
+            _id : productId,
+            product: restroData,
+            quantity : quantity
+          });
+        }
+      })
+    );
+
+    return res.status(200).json(matchData);
   } catch (err) {
-    // Handle any errors that occur
+    console.error("Error in getAllCartItems:", err);
     next(err);
   }
 };
@@ -213,7 +257,7 @@ export const newOrder = async (req, res) => {
         };
       });
 
-      console.log('Order ID:', id);
+      console.log("Order ID:", id);
 
       try {
         const session = await stripe.checkout.sessions.create({
@@ -231,7 +275,10 @@ export const newOrder = async (req, res) => {
         res.status(200).json({ url: session.url });
       } catch (err) {
         console.error("Stripe session creation error:", err);
-        return res.status(500).json({ message: "Error creating Stripe session", error: err.message });
+        return res.status(500).json({
+          message: "Error creating Stripe session",
+          error: err.message,
+        });
       }
     } else {
       await User.findByIdAndUpdate(user, {
@@ -245,7 +292,6 @@ export const newOrder = async (req, res) => {
     res.status(500).json({ message: "Error placing order", error });
   }
 };
-
 
 // export const getAllOrders = async (req, res, next) => {
 //   try {
@@ -394,4 +440,3 @@ export const getUserOrders = async (req, res, next) => {
     next(err);
   }
 };
-

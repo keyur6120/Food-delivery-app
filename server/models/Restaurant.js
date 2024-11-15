@@ -82,6 +82,11 @@ const PublishSchema = new Schema(
             type: String,
             required: true
         },
+        product:{
+            type : mongoose.Schema.Types.ObjectId,
+            ref: 'Restaurant',
+            default: 'Restaurant'
+        }
     },
 
     {

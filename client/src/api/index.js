@@ -21,11 +21,12 @@ export const getCart = async ({ uid }) =>
   });
 
 // add to cart
-export const addToCart = async ({ pid, uid, qun }) =>
+export const addToCart = async ({ pid, uid, qun, RID }) =>
   await MYDB.post(`/user/addcart`, {
     productId: pid,
     userId: uid,
     quantity: qun,
+    RestroId :RID
   });
 
 // delete from cart

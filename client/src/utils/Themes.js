@@ -3,7 +3,6 @@ export const lightTheme = {
   bgLight: "#FFFFFF",
   primary: "#EB0029",
   secondary: "#5B86E5",
-
   disabled: "#b1b2b3",
   menubar: "#191c29",
   navbar: "#242B3F",

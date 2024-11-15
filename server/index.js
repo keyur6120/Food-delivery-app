@@ -5,22 +5,27 @@ import cors from "cors";
 import mongoose from "mongoose";
 import UserRoutes from "./routes/User.js";
 import FoodRoutes from "./routes/Food.js";
+// import {Server} from 'socket.io'
 import MakeRestro from "./routes/Restaurant.js";
 import cookieParser from "cookie-parser";
 import Category from "./routes/Category.js";
-import localtunnel from "localtunnel";
+// import http from 'http'
+import Request from './routes/request.Routes.js'
 
-const app = express();
+const app = express()
+
+
 app.use(cookieParser());
+
 const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
 
 // CORS middleware setup
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Check if the incoming origin is in the allowed origins
+      
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-        callback(null, true); // Allow the request
+        callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS")); // Reject the request
       }
@@ -36,6 +41,7 @@ app.use("/user", UserRoutes);
 app.use("/food", FoodRoutes);
 app.use("/Restro", MakeRestro);
 app.use("/category", Category);
+app.use('/chat',Request)
 
 // error handler
 app.use((err, req, res, next) => {
@@ -48,11 +54,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-const connectDB = () => {
-  mongoose.set("strictQuery", true);
-  mongoose
-    .connect(process.env.DB_STRING)
-    .then(() => console.log("Connected to MongoDB"))
+const connectDB = async() => {
+  mongoose.set("strictQuery", false);
+  mongoose.set("strictPopulate", false);  
+  await mongoose.connect(process.env.DB_STRING)
+    .then(() => 
+      console.log('DB connected' 
+     )
+  )
     .catch((err) => {
       console.error("failed to connect with mongo");
       console.error(err);
@@ -61,8 +70,10 @@ const connectDB = () => {
 
 const startServer = async () => {
   try {
-    connectDB();
-    app.listen(8080, () => console.log("Server started on port 8080"));
+    
+   connectDB();
+   app.listen(8080, () => console.log("Server started on port 8080"))
+    
     // const tunnel = await localtunnel({ port: 8080, subdomain: 'foodapp' });
     // console.log('Tunnel URL:', tunnel.url);
   } catch (error) {

@@ -9,12 +9,14 @@ import {
 } from "../../api";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../../redux/reducers/SnackbarSlice";
+import {useNavigate} from 'react-router-dom'
 
 const ProductsCard = ({ product }) => {
   const [Data, setData] = useState([product]); // Mock product data
   const [favorite, setFavorite] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate(); 
 
   // Function to add to favorite
   const addFavourite = async () => {
@@ -108,12 +110,13 @@ console.log('data',Data)
   return (
     <div className="product-list">
       {Data.map((product) => (
-        <div key={product._id} className="product-card">
+        <div key={product._id} className="product-card"  >
           <div className="product-image-container">
             <img
               src={product.img}
               alt={product.name}
               className="product-image"
+              onClick={()=>navigate(`/dishes/${product._id}`)}
             />
             <button
               className="like-button"
@@ -123,7 +126,7 @@ console.log('data',Data)
               {favoriteLoading ? (
                 <CircularProgress size={15} />
               ) : favorite ? (
-                <FaHeart color="red" />
+                <FaHeart color="green" />
               ) : (
                 <FaHeart color="black" />
               )}

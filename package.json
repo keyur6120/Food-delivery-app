@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start-App": "concurrently \"npm run start-client\" \"npm run start-server\"",
+    "start-App": "concurrently \"npm run start-server\" \"npm run start-client\" \"npm run start-admin\" ",
     "start-client": "npm --prefix ./client start",
-    "start-server": "npm --prefix ./server start"
+    "start-server": "npm --prefix ./server start",
+    "start-admin" : "npm --prefix ./admin start"
   },
   "keywords": [],
   "author": "",

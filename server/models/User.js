@@ -12,9 +12,22 @@ const UserSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
+    phone: {
+      type: Number,
+      unique: true,
+    },
     password: {
       type: String,
       required: true,
+    },
+    friends: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "User",
+      default: [],
+    },
+    socketId: {
+      type: String,
+      default: null,
     },
     img: {
       type: String,
@@ -26,14 +39,15 @@ const UserSchema = new mongoose.Schema(
       default: [],
     },
     orders: {
-      type: [mongoose.Schema.Types.ObjectId],  // Changed to an array for multiple orders
+      type: [mongoose.Schema.Types.ObjectId], // Changed to an array for multiple orders
       ref: "Orders",
       default: [],
     },
     cart: {
       type: [
         {
-          product: { type: mongoose.Schema.Types.ObjectId, ref: "Food" },
+          product: { type: String},
+          Restro : {type:String},
           quantity: { type: Number, default: 1 },
         },
       ],
@@ -41,19 +55,19 @@ const UserSchema = new mongoose.Schema(
     },
     restaurant: {
       type: [mongoose.Schema.Types.ObjectId],
-      ref: 'Restaurant',
-      default: []
+      ref: "Restaurant",
+      default: [],
     },
     categories: {
       type: [String], // Ensure this is initialized as an array
       default: [],
     },
-    splitBills :{
-      type : [mongoose.Schema.Types.ObjectId],
-      ref:"splitBills",
-    }
+    splitBills: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "splitBills",
+    },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
 export default mongoose.model("User", UserSchema);

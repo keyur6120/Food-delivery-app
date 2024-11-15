@@ -75,7 +75,6 @@ export const getFoodItems = async (req, res, next) => {
       ];
     }
     const foodList = await Food.find(filter);
-
     return res.status(200).json(foodList);
   } catch (err) {
     next(err);

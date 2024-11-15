@@ -160,69 +160,69 @@ const FoodDetails = () => {
     }
   };
   console.log("product", product);
-  // const removeFavourite = async () => {
-  //   setFavoriteLoading(true);
-  //   const Id = localStorage.getItem("user_Id");
-  //   await deleteFromFavourite({ pid: id, uid: Id })
-  //     .then((res) => {
-  //       setFavorite(false);
-  //       setFavoriteLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       setFavoriteLoading(false);
-  //       dispatch(
-  //         openSnackbar({
-  //           message: err.message,
-  //           severity: "error",
-  //         })
-  //       );
-  //     });
-  // };
+  const removeFavourite = async () => {
+    setFavoriteLoading(true);
+    const Id = localStorage.getItem("user_Id");
+    await deleteFromFavourite({ pid: id, uid: Id })
+      .then((res) => {
+        setFavorite(false);
+        setFavoriteLoading(false);
+      })
+      .catch((err) => {
+        setFavoriteLoading(false);
+        dispatch(
+          openSnackbar({
+            message: err.message,
+            severity: "error",
+          })
+        );
+      });
+  };
 
-  // const addFavourite = async () => {
-  //   setFavoriteLoading(true);
-  //   const Id = localStorage.getItem("user_Id");
-  //   await addToFavourite({ pid: id, uid: Id })
-  //     .then((res) => {
-  //       setFavorite(true);
-  //       setFavoriteLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       setFavoriteLoading(false);
-  //       dispatch(
-  //         openSnackbar({
-  //           message: err.message,
-  //           severity: "error",
-  //         })
-  //       );
-  //     });
-  // };
+  const addFavourite = async () => {
+    setFavoriteLoading(true);
+    const Id = localStorage.getItem("user_Id");
+    await addToFavourite({ pid: id, uid: Id })
+      .then((res) => {
+        setFavorite(true);
+        setFavoriteLoading(false);
+      })
+      .catch((err) => {
+        setFavoriteLoading(false);
+        dispatch(
+          openSnackbar({
+            message: err.message,
+            severity: "error",
+          })
+        );
+      });
+  };
 
-  // const checkFavorite = async () => {
-  //   setFavoriteLoading(true);
-  //   const Id = localStorage.getItem("user_Id");
-  //   await getFavourite({ uid: Id })
-  //     .then((res) => {
-  //       const favourit = res.data.map((item) => {
-  //         return item._id;
-  //       });
-  //       if (favourit.includes(id)) {
-  //         setFavorite(true);
-  //       } else {
-  //         setFavorite(false);
-  //       }
-  //       setFavoriteLoading(false);
-  //     })
-  //     .catch((err) => {
-  //       setFavoriteLoading(false);
-  //       dispatch(
-  //         openSnackbar({
-  //           message: err.message,
-  //           severity: "error",
-  //         })
-  //       );
-  //     });
-  // };
+  const checkFavorite = async () => {
+    setFavoriteLoading(true);
+    const Id = localStorage.getItem("user_Id");
+    await getFavourite({ uid: Id })
+      .then((res) => {
+        const favourit = res.data.map((item) => {
+          return item._id;
+        });
+        if (favourit.includes(id)) {
+          setFavorite(true);
+        } else {
+          setFavorite(false);
+        }
+        setFavoriteLoading(false);
+      })
+      .catch((err) => {
+        setFavoriteLoading(false);
+        dispatch(
+          openSnackbar({
+            message: err.message,
+            severity: "error",
+          })
+        );
+      });
+  };
 
   useEffect(() => {
     getProduct();
@@ -230,28 +230,28 @@ const FoodDetails = () => {
   }, [favorite]);
 
   // // done
-  // const addCart = async (condition) => {
-  //   setCartLoading(true);
-  //   const Id = localStorage.getItem("user_Id");
-  //   // token, { productId: id, quantity: 1 }
-  //   await addToCart({ pid: id, uid: Id, qun: 1 })
-  //     .then((res) => {
-  //       setCartLoading(false);
-  //       console.log("consoling from add cart in Food Details", res.data);
-  //       if (condition) {
-  //         navigate("/cart");
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       setCartLoading(false);
-  //       dispatch(
-  //         openSnackbar({
-  //           message: err.message,
-  //           severity: "error",
-  //         })
-  //       );
-  //     });
-  // };
+  const addCart = async (condition) => {
+    setCartLoading(true);
+    const Id = localStorage.getItem("user_Id");
+    // token, { productId: id, quantity: 1 }
+    await addToCart({ pid: id, uid: Id, qun: 1,RID : restroId})
+      .then((res) => {
+        setCartLoading(false);
+        console.log("consoling from add cart in Food Details", res.data);
+        if (condition) {
+          navigate("/cart");
+        }
+      })
+      .catch((err) => {
+        setCartLoading(false);
+        dispatch(
+          openSnackbar({
+            message: err.message,
+            severity: "error",
+          })
+        );
+      });
+  };
 
   return (
     <Container>
@@ -289,13 +289,13 @@ const FoodDetails = () => {
                 full
                 outlined
                 isLoading={cartLoading}
-                // onClick={() => addCart()}
+                onClick={() => addCart()}
               />
               <Button
                 text="Order Now"
                 full
                 onClick={() => {
-                  // addCart(true);
+                  addCart(true);
                 }}
               />
               <Button
@@ -309,7 +309,7 @@ const FoodDetails = () => {
                 full
                 outlined
                 isLoading={favoriteLoading}
-                // onClick={() => (favorite ? removeFavourite() : addFavourite())}
+                onClick={() => (favorite ? removeFavourite() : addFavourite())}
               />
             </ButtonWrapper>
           </Details>

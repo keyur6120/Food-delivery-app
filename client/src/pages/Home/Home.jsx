@@ -4,6 +4,7 @@ import HeaderImage from "../../utils/Images/Header.png";
 import ProductCategoryCard from "../../components/cards/ProductCategoryCard.jsx";
 import ProductsCard from "../../components/cards/ProductsCard.jsx";
 import { getAllProducts } from "../../api/index.js";
+import { useNavigate } from "react-router-dom";
 import { CircularProgress } from "@mui/material";
 import { getCategory } from "../../api/index.js";
 const Container = styled.div`
@@ -49,12 +50,11 @@ const CardWrapper = styled.div`
 `;
 
 const Home = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const [category, setcategory] = useState([]);
 
   const getProducts = async () => {
-    setLoading(true);
     await getAllProducts().then((res) => {
       setProducts(res.data);
       setLoading(false);
@@ -70,32 +70,35 @@ const Home = () => {
   useEffect(() => {
     getProducts();
     getCategories();
-  }, [setProducts,setcategory]);
+  }, [setProducts, setcategory]);
 
   return (
-    <Container>
-      <Section>
-        <Img src={HeaderImage} />
-      </Section>
-      <Section>
-        <Title>Food Categories</Title>
-        <CardWrapper>
-          <ProductCategoryCard />
-        </CardWrapper>
-      </Section>
-      <Section>
-        <Title>Most Popular</Title>
-        {loading ? (
-          <CircularProgress />
-        ) : (
-          <CardWrapper onClick={()=> console.log('click on card')}>
-            {products.map((item, index) => (
-              <ProductsCard product={item} key={index} />
-            ))}
+    <>
+    {loading ? <h2>Loading App</h2>: <Container>
+        <Section>
+          <Img src={HeaderImage} />
+        </Section>
+        <Section>
+          <Title>Food Categories</Title>
+          <CardWrapper>
+            <ProductCategoryCard />
           </CardWrapper>
-        )}
-      </Section>
-    </Container>
+        </Section>
+        <Section>
+          <Title>Most Popular</Title>
+          {loading ? (
+            <CircularProgress />
+          ) : (
+            <CardWrapper>
+              {products.map((item, index) => (
+                <ProductsCard product={item} key={index} />
+              ))}
+            </CardWrapper>
+          )}
+        </Section>
+      </Container>
+      }
+    </>
   );
 };
 

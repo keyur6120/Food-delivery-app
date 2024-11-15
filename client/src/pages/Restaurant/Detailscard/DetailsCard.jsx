@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 
 export default function RestaurantPage() {
   const { id } = useParams();
+  console.log(id)
   const [activeCategory, setActiveCategory] = useState("Order Online"); 
   const [horizontalButton, setHorizontalButton] = useState([
     "Overview",
