@@ -125,28 +125,18 @@ export const removeFromCart = async (req, res, next) => {
       return next(createError(404, "User not found"));
     }
     const productIndex = user.cart.findIndex((item) => item.equals(productId));
-    if (productIndex !== -1) {
-      if (quantity && quantity > 0) {
-        user.cart[productIndex].quantity -= quantity;
-        if (user.cart[productIndex].quantity <= 0) {
-          user.cart.splice(productIndex, 1); // Remove the product from the cart
-        }
-      } else {
-        user.cart.splice(productIndex, 1);
-      }
-
+    if(productIndex){
+      user.cart.splice(productIndex,1)
+    }
       await user.save();
       return res
         .status(200)
         .json({ message: "Product quantity updated in cart", user });
-    } else {
-      return next(createError(404, "Product not found in the user's cart"));
     }
-  } catch (err) {
-    next(err);
-  }
-};
-
+    catch(error){
+      next(error)
+    } 
+  } 
 //!getCart
 export const getAllCartItems = async (req, res, next) => {
   try {
@@ -401,23 +391,30 @@ export const getverfied = async (req, res) => {
 
 export const SplitBill = async (req, res) => {
   try {
-    const { userId } = req.query;
+    const { userId,orderId,friends } = req.body;
 
-    const user = await User.findById(userId);
-
+    const user = await User.findById(userId)
     if (!user) {
       return res.status(500).json({ message: "user not found" });
     }
 
-    const splitBill = new SplitBills(req.body);
+    const findOrder = await Orders.findById(orderId)
+    const Split = findOrder.total_amount / (friends.length + 1)
 
-    const savedSplitBill = await splitBill.save();
+    const BillDetails = friends.map((friend)=>({
+        email : friend.email,
+        amountOwed: Split,
+    }))
 
-    user.splitBills.push(savedSplitBill);
 
-    await user.save();
+    const splitBill = new SplitBills({
+      Owner:userId,
+      orderId:orderId,
+      details : BillDetails
+    })
+    await splitBill.save()
 
-    return res.status(201).json(savedSplitBill); // Ensure to use 'return' to prevent further execution
+    return res.status(201).json(splitBill); // Ensure to use 'return' to prevent further execution
   } catch (error) {
     return res.status(400).json({ error: error.message }); // Ensure to use 'return' to prevent further execution
   }
@@ -440,3 +437,48 @@ export const getUserOrders = async (req, res, next) => {
     next(err);
   }
 };
+
+// {
+//   "address": {
+//       "city": "unjha",
+//       "state": "Gujarat",
+//       "ZIP": "384170",
+//       "complete_address": "14,astha bunglow,unjha"
+//   },
+//   "_id": "6737293ae6a028fce79311bd",
+//   "Username": "Keyur Suthar",
+//   "total_amount": 306.8,
+//   "status": "cash",
+//   "delivery_status": "Food Processing",
+//   "Time": null,
+//   "products": [
+//       {
+//           "productId": "66bb5daaa8e3e20b30b4f343",
+//           "quantity": 1,
+//           "_id": "6737293ae6a028fce79311be"
+//       },
+//       {
+//           "productId": "66bb5daaa8e3e20b30b4f337",
+//           "quantity": 1,
+//           "_id": "6737293ae6a028fce79311bf"
+//       }
+//   ],
+//   "product_Info": [
+//       {
+//           "product_name": "Creamy Alfredo Pasta",
+//           "product_price": 180,
+//           "product_image": "https://www.allrecipes.com/thmb/gTibTRJ8MW87L0jMhAvXPjIDD94=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/19402-quick-and-easy-alfredo-sauce-DDMFS-4x3-17abb2055c714807944172db9172b045.jpg",
+//           "quantity": 1,
+//           "_id": "6737293ae6a028fce79311c0"
+//       },
+//       {
+//           "product_name": "Chocolate Brownie Sundae",
+//           "product_price": 80,
+//           "product_image": "https://recipes.net/wp-content/uploads/2023/05/liams-brownie-sundae_19db08639783daa2a1f2774a647e28cc.jpeg",
+//           "quantity": 1,
+//           "_id": "6737293ae6a028fce79311c1"
+//       }
+//   ],
+//   "createdAt": "2024-11-15T10:58:02.463Z",
+//   "updatedAt": "2024-11-15T10:58:02.463Z"
+// }

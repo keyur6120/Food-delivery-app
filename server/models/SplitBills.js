@@ -7,25 +7,24 @@ const splitSchema = new Schema({
         ref: "User",
         required: true,
     },
+    orderId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Orders",
+    },
     details: [{
-        orderId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Orders",
-        },
         amountOwed: {
             type: Number,
             required: true,
         },
         email: {
-            type: [String],
+            type:String,
             required: true,
         },
         phone: {
-            type: [String],
-            required: true,
+            type: String,
         },
         paymentStatus: {
-            type: [Boolean],
+            type: Boolean,
             default: false,
         },
         paymentDate: {

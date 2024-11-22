@@ -3,6 +3,7 @@ import Food from "../models/Food.js";
 import { createError } from "../error.js";
 import Restaurant from "../models/Restaurant.js";
 import { path } from "../config/Cloudnariy.js";
+import Orders from '../models/Orders.js'
 
 export const addProducts = async (req, res, next) => {
   try {
@@ -125,3 +126,4 @@ export const createCategory = async (req, res, next) => {
     res.status(500).json({ message: "error at category controller", error });
   }
 };
+

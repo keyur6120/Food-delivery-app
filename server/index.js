@@ -10,11 +10,11 @@ import MakeRestro from "./routes/Restaurant.js";
 import cookieParser from "cookie-parser";
 import Category from "./routes/Category.js";
 // import http from 'http'
-import Request from './routes/request.Routes.js'
+import Request from "./routes/request.Routes.js";
 
-const app = express()
-
-
+const app = express();
+mongoose.set("strictQuery", false);
+mongoose.set("strictPopulate", false);
 app.use(cookieParser());
 
 const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
@@ -23,7 +23,6 @@ const allowedOrigins = ["http://localhost:3000", "http://localhost:5173"];
 app.use(
   cors({
     origin: function (origin, callback) {
-      
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
@@ -41,7 +40,7 @@ app.use("/user", UserRoutes);
 app.use("/food", FoodRoutes);
 app.use("/Restro", MakeRestro);
 app.use("/category", Category);
-app.use('/chat',Request)
+app.use("/chat", Request);
 
 // error handler
 app.use((err, req, res, next) => {
@@ -54,26 +53,24 @@ app.use((err, req, res, next) => {
   });
 });
 
-const connectDB = async() => {
-  mongoose.set("strictQuery", false);
-  mongoose.set("strictPopulate", false);  
-  await mongoose.connect(process.env.DB_STRING)
-    .then(() => 
-      console.log('DB connected' 
-     )
-  )
-    .catch((err) => {
-      console.error("failed to connect with mongo");
-      console.error(err);
-    });
-};
-
 const startServer = async () => {
   try {
-    
-   connectDB();
-   app.listen(8080, () => console.log("Server started on port 8080"))
-    
+    app.listen(8080, () => console.log("Server started on port 8080"));
+    const startTime = new Date().getTime();
+    await mongoose
+      .connect(process.env.DB_STRING,{family:4})
+      .then(() => {
+        const end = new Date().getTime()
+        console.log( (end - startTime)  / 1000);
+        console.log("DB connected"
+
+        );
+      })
+      .catch((err) => {
+        console.error("failed to connect with mongo");
+        console.error(err);
+      });
+
     // const tunnel = await localtunnel({ port: 8080, subdomain: 'foodapp' });
     // console.log('Tunnel URL:', tunnel.url);
   } catch (error) {

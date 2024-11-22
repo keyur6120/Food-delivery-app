@@ -22,6 +22,7 @@ export default function Component() {
   const [product, setProduct] = useState([]);
   const [buttonLoad, setButtonLoad] = useState(false);
   const [Error, setError] = useState(false);
+  const Id = localStorage.getItem('user_Id')
   const [deliveryDetails, setDeliveryDetails] = useState({
     firstName: "",
     emailAddress: "",
@@ -34,12 +35,10 @@ export default function Component() {
     },
   });
 
-  console.log(product);
-  // done working
   const getProducts = async () => {
     const Id = localStorage.getItem("user_Id");
     try {
-      const res = await getCart({
+   await getCart({
         uid: Id,
       }).then((res) => {
         setProduct(res.data);
@@ -54,7 +53,7 @@ export default function Component() {
 
   const calculateSubtotal = () => {
     const cartItem = product.reduce(
-      (total, item) => total + item.quantity * item?.product?.price?.org,
+      (total, item) => total + item.quantity * item?.product?.price?.mrp,
       0
     );
     const Tax = (cartItem * 18) / 100;
@@ -124,17 +123,26 @@ export default function Component() {
     )
   }
 
-  const filterOut=(id)=>{
+  const filterOut=async(id,quantity)=>{
+    const Id = localStorage.getItem('user_Id')
     setProduct((prevData)=>
-     prevData.filter((item)=> item._id !== id)
-    )
+      prevData.filter((item)=> item._id !== id)
+     )
+     try{
+       await deleteFromCart({pid:id,qun:quantity,uid:Id}).then(()=>{
+         console.log('deleted')
+         toast.success('product removed')
+        })
+      }catch(err){
+        console.log(err)
+      }
+
   }
+
   useEffect(() => {
     getProducts();
     newhandler();
   }, [ setProduct, buttonLoad]);
-
-
 
   return (
     <div className="cart-container">
@@ -315,18 +323,7 @@ export default function Component() {
                   <span>Cash on Delivery</span>
                 </label>
               </div>
-              <div className="cart-icon-div">
-                <input
-                  type="radio"
-                  id="cart-pos"
-                  checked={paymentMethod === "pos"}
-                  onChange={() => setPaymentMethod("pos")}
-                />
-                <label htmlFor="cart-pos" className="cart-icon-label">
-                  <Truck className="cart-icon" />
-                  <span>POS on Delivery</span>
-                </label>
-              </div>
+             
             </div>
             <div className="cart-form-item">
               <label htmlFor="cart-note">Additional Notes</label>
@@ -357,16 +354,16 @@ export default function Component() {
                 <div className="cart-product-info">
                   <h3>{item?.product?.name}</h3>
                   <p>
-                    {item?.quantity} x ${item?.product?.price?.org}
+                    {item?.quantity} x ${item?.product?.price?.mrp}
                   </p>
                 </div>
                 <div className="Cart-add-Button">
                   <img src={addImage} className="Cart-Add-item" alt="" onClick={()=>handlePlus(item._id)} />
-                  <span>{item?.quantity<=0? filterOut(item._id):item?.quantity}</span>
+                  <span>{item?.quantity<=0? filterOut(item._id,item.quantity):item?.quantity}</span>
                   <img src={Minusimage} alt=""  className="Cart-Minus-item" onClick={()=>handleMinus(item._id)}/>
                 </div>
                 <div className="cart-product-price">
-                  ${(item?.quantity * item?.product?.price?.org).toFixed(2)}
+                  ${(item?.quantity * item?.product?.price?.mrp).toFixed(2)}
                 </div>
               </div>
             ))}

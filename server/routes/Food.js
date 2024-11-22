@@ -14,6 +14,5 @@ router.get("/:foodId/:RestaurantId", getFoodById);
 
 router.post("/category",createCategory)
 
-
 // router.post('/')
 export default router;
